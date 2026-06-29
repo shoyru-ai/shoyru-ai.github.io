@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shoyru's Addon Suite — the add-on manager ESO actually deserves</title>
+<meta name="description" content="Find, install, and update Elder Scrolls Online add-ons in a couple of clicks. Describe what you want in plain English and AI finds it. Free core, Pro power tools." />
+<style>
+  :root{
+    --bg:#1B1B1F; --panel:#26262C; --panel2:#222227; --border:#3A3A44;
+    --text:#E7E7EC; --muted:#9A9AA6; --accent:#8B5CF6; --accent2:#A78BFA; --good:#49A65A;
+    --radius:14px; --max:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
+    background:rgba(27,27,31,.78);border-bottom:1px solid var(--border)}
+  nav .wrap{display:flex;align-items:center;gap:24px;height:62px}
+  .logo{font-weight:800;font-size:18px;letter-spacing:.2px}
+  .logo .dot{color:var(--accent)}
+  nav .links{display:flex;gap:22px;margin-left:auto;align-items:center}
+  nav .links a{color:var(--muted);font-size:15px}
+  nav .links a:hover{color:var(--text)}
+  #lang{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:8px;
+    padding:6px 8px;font-size:13px;cursor:pointer}
+  .btn{display:inline-block;border-radius:9px;padding:10px 18px;font-weight:600;font-size:15px;
+    border:1px solid var(--border);cursor:pointer;transition:.15s}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent2)}
+  .btn.good{background:var(--good);border-color:var(--good);color:#fff}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* hero */
+  header{padding:74px 0 40px;text-align:center}
+  .badge{display:inline-block;border:1px solid var(--border);background:var(--panel);
+    color:var(--muted);font-size:13px;padding:5px 12px;border-radius:999px;margin-bottom:22px}
+  h1{font-size:clamp(34px,5.5vw,56px);line-height:1.08;font-weight:800;letter-spacing:-.5px}
+  .sub{font-size:clamp(17px,2.3vw,21px);color:var(--muted);max-width:640px;margin:18px auto 30px}
+  .cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .cta .btn{padding:13px 26px;font-size:16px}
+  .note{margin-top:14px;font-size:13px;color:var(--muted)}
+
+  /* shot + app mockup */
+  .shot{margin:48px auto 0;max-width:920px;border:1px solid var(--border);border-radius:var(--radius);
+    overflow:hidden;background:var(--panel)}
+  .app{background:var(--bg);text-align:left;font-size:14px}
+  .appbar{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--panel2);border-bottom:1px solid var(--border)}
+  .appbar .dots{display:flex;gap:6px}
+  .appbar .dots span{width:11px;height:11px;border-radius:50%;background:#3a3a44;display:block}
+  .appbar .title{font-weight:700;font-size:15px}
+  .appbar .ver{color:var(--muted);font-weight:600;font-size:12px;background:var(--panel);border:1px solid var(--border);padding:1px 7px;border-radius:5px;margin-left:8px}
+  .appbar .pro{color:#fff;font-weight:700;font-size:11px;background:var(--accent);padding:2px 9px;border-radius:999px;margin-left:6px}
+  .tabs{display:flex;gap:4px;padding:12px 14px 0;border-bottom:1px solid var(--border)}
+  .tabs span{padding:8px 15px;color:var(--muted);border-radius:7px 7px 0 0}
+  .tabs span.on{background:var(--panel);color:var(--text);font-weight:600}
+  .searchrow{display:flex;gap:10px;padding:18px 16px 12px;align-items:center}
+  .searchrow .search{flex:1;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:11px 13px}
+  .searchrow .search b{color:var(--text);font-weight:500}
+  .searchrow .dbtn{background:var(--good);color:#fff;font-weight:600;border-radius:8px;padding:11px 17px;white-space:nowrap}
+  .rows{padding:0 12px 16px}
+  .row{display:flex;align-items:center;gap:13px;padding:11px 9px;border-radius:8px}
+  .row:nth-child(odd){background:var(--panel)}
+  .row .thumb{width:30px;height:30px;border-radius:6px;flex:none;background:linear-gradient(135deg,var(--accent),var(--good));opacity:.85}
+  .row .nm{flex:1;font-weight:600;line-height:1.3}
+  .row .nm small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+  .row .meta{color:var(--muted);font-size:13px;width:50px;text-align:right}
+  .row .inst{background:var(--good);color:#fff;font-weight:600;font-size:13px;border-radius:7px;padding:6px 15px}
+  @media(max-width:540px){.row .meta{display:none}.searchrow .search{font-size:13px}}
+
+  /* stats */
+  .stats{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin:54px auto;max-width:760px}
+  .stat{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--border);
+    border-radius:var(--radius);padding:22px;text-align:center}
+  .stat b{display:block;font-size:28px;font-weight:800}
+  .stat span{color:var(--muted);font-size:14px}
+
+  /* sections */
+  section{padding:46px 0}
+  .h2{font-size:clamp(26px,3.4vw,34px);font-weight:800;text-align:center;letter-spacing:-.3px}
+  .lead{color:var(--muted);text-align:center;max-width:620px;margin:12px auto 0;font-size:17px}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+  .card.feature-star{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+  .card .ico{font-size:26px}
+  .card h3{font-size:18px;margin:12px 0 6px;font-weight:700}
+  .card p{color:var(--muted);font-size:15px}
+  .tag{display:inline-block;font-size:11px;font-weight:700;color:var(--accent);
+    border:1px solid var(--accent);border-radius:999px;padding:2px 9px;margin-left:8px;vertical-align:middle}
+
+  /* pricing */
+  .price{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:38px}
+  .plan{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:26px;text-align:center}
+  .plan.best{border-color:var(--accent);position:relative}
+  .plan.best::before{content:attr(data-badge);position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+    background:var(--accent);color:#fff;font-size:11px;font-weight:700;padding:3px 11px;border-radius:999px}
+  .plan .name{font-weight:700;font-size:16px}
+  .plan .amt{font-size:34px;font-weight:800;margin:10px 0 2px}
+  .plan .per{color:var(--muted);font-size:14px}
+  .plan .strike{color:var(--muted);text-decoration:line-through;font-size:14px;margin-top:4px}
+  .plan ul{list-style:none;text-align:left;margin:18px 0;font-size:14px;color:var(--muted)}
+  .plan li{margin:7px 0}
+  .plan li::before{content:"✓ ";color:var(--good);font-weight:700}
+  .freeline{text-align:center;color:var(--muted);font-size:14px;margin-top:18px}
+
+  /* mac */
+  .mac{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+    padding:30px;text-align:center;margin-top:20px}
+  .mac h3{font-size:22px;font-weight:800}
+  .mac p{color:var(--muted);margin:8px auto 16px;max-width:520px}
+
+  /* footer */
+  footer{border-top:1px solid var(--border);padding:34px 0;margin-top:30px;color:var(--muted);font-size:14px}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+  footer a{color:var(--muted)}footer a:hover{color:var(--text)}
+
+  @media(max-width:760px){.grid,.price{grid-template-columns:1fr}nav .links a{display:none}}
+
+  /* premium polish */
+  .grad{background:linear-gradient(100deg,#B79CFA 0%,#8B5CF6 42%,#49C5A6 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  header{position:relative;overflow:hidden}
+  header::before{content:"";position:absolute;top:-200px;left:50%;transform:translateX(-50%);
+    width:820px;height:560px;pointer-events:none;z-index:0;filter:blur(18px);
+    background:radial-gradient(ellipse at center,rgba(139,92,246,.28),transparent 60%)}
+  header::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+    background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:26px 26px;
+    -webkit-mask-image:radial-gradient(ellipse 75% 55% at 50% 22%,#000,transparent);
+            mask-image:radial-gradient(ellipse 75% 55% at 50% 22%,#000,transparent)}
+  header .wrap{position:relative;z-index:1}
+  .shot{box-shadow:0 40px 90px -34px rgba(0,0,0,.7),0 0 0 1px var(--border);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+  .shot:hover{transform:translateY(-5px)}
+  .card{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+  .card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 18px 44px -24px rgba(139,92,246,.55)}
+  .plan{transition:transform .2s ease,box-shadow .2s ease}
+  .plan:hover{transform:translateY(-4px);box-shadow:0 18px 44px -24px rgba(0,0,0,.55)}
+  .btn{transition:transform .15s ease,background .15s ease,box-shadow .15s ease}
+  .btn.good:hover,.btn.primary:hover{transform:translateY(-1px);box-shadow:0 12px 26px -10px rgba(139,92,246,.6)}
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="logo">Shoyru's Addon Suite<span class="dot">.</span></div>
+  <div class="links">
+    <a href="#features" data-i18n="nav_features">Features</a>
+    <a href="#pricing" data-i18n="nav_pricing">Pricing</a>
+    <a href="#mac" data-i18n="nav_mac">macOS</a>
+    <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest" class="btn primary" style="padding:8px 16px" data-i18n="nav_download">Download</a>
+    <select id="lang" aria-label="Language">
+      <option value="en">EN</option>
+      <option value="pt">PT</option>
+      <option value="es">ES</option>
+    </select>
+  </div>
+</div></nav>
+
+<header><div class="wrap">
+  <div class="badge" data-i18n="hero_badge">For The Elder Scrolls Online · Windows</div>
+  <h1 data-i18n-html="hero_h1">Don't search for add-ons.<br><span class="grad">Describe</span> them.</h1>
+  <p class="sub" data-i18n="hero_sub">The add-on manager ESO actually deserves. Type what you want in plain English and AI finds it — then install, update, and organize everything in a couple of clicks.</p>
+  <div class="cta">
+    <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest" class="btn good" data-i18n="cta_free">Download free</a>
+    <a href="#pricing" class="btn ghost" data-i18n="cta_pro">See Pro</a>
+  </div>
+  <div class="note" data-i18n="hero_note">Free core, no ads. Windows 10/11. ~150 MB.</div>
+
+  <div class="shot reveal"><div class="app">
+    <div class="appbar">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="title">Shoyru's Addon Suite<span class="ver">v0.4</span><span class="pro">✓ Pro</span></div>
+    </div>
+    <div class="tabs"><span>Installed</span><span class="on">Browse ESOUI</span><span>My Add-ons</span></div>
+    <div class="searchrow">
+      <div class="search"><b>show me alerts for abilities</b></div>
+      <div class="dbtn">✨ Describe</div>
+    </div>
+    <div class="rows">
+      <div class="row"><div class="thumb"></div><div class="nm">Srendarr — Aura, Buff &amp; Debuff Tracking<small>by Phinix</small></div><div class="meta">v2.4.1</div><div class="inst">Install</div></div>
+      <div class="row"><div class="thumb"></div><div class="nm">Action Duration Reminder<small>by Kyzeragon</small></div><div class="meta">v4.2.0</div><div class="inst">Install</div></div>
+      <div class="row"><div class="thumb"></div><div class="nm">Code's Combat Alerts<small>by Code</small></div><div class="meta">v3.1.7</div><div class="inst">Install</div></div>
+      <div class="row"><div class="thumb"></div><div class="nm">Hodor Reflexes — Ultimate &amp; Cast Alerts<small>by Hoft</small></div><div class="meta">v3.0.2</div><div class="inst">Install</div></div>
+      <div class="row"><div class="thumb"></div><div class="nm">Pulsar — Proc &amp; Cooldown Tracker<small>by Saenic</small></div><div class="meta">v1.8.3</div><div class="inst">Install</div></div>
+    </div>
+  </div></div>
+</div></header>
+
+<div class="wrap">
+  <div class="stats reveal">
+    <div class="stat"><b>3,000+</b><span data-i18n="stat1_t">add-ons, searchable by meaning</span></div>
+    <div class="stat"><b>1-click</b><span data-i18n="stat2_t">install, with dependencies</span></div>
+    <div class="stat"><b>$0</b><span data-i18n="stat3_t">to browse, install &amp; remove</span></div>
+  </div>
+</div>
+
+<section id="features"><div class="wrap">
+  <h2 class="h2" data-i18n="feat_h2">Everything Minion does — and the thing it can't</h2>
+  <p class="lead" data-i18n="feat_lead">A fast, native, ESO-only manager. No Java bloat, no ads, no twelve other games.</p>
+  <div class="grid reveal">
+    <div class="card feature-star">
+      <div class="ico">✨</div>
+      <h3 data-i18n-html="f1_h">Describe it, AI finds it <span class="tag">PRO</span></h3>
+      <p data-i18n="f1_p">"Show me alerts for abilities." Type what you want and AI surfaces the add-ons that match — by meaning, not just keywords. No one else does this.</p>
+    </div>
+    <div class="card">
+      <div class="ico">🔎</div>
+      <h3 data-i18n="f2_h">Browse all of ESOUI</h3>
+      <p data-i18n="f2_p">Search the entire ESOUI catalog and install anything in one click. Filter by category, sort by downloads or date.</p>
+    </div>
+    <div class="card">
+      <div class="ico">🔗</div>
+      <h3 data-i18n="f3_h">Dependencies, handled</h3>
+      <p data-i18n="f3_p">See exactly what each add-on needs — and let Pro auto-install missing libraries so nothing breaks in-game.</p>
+    </div>
+    <div class="card">
+      <div class="ico">🔄</div>
+      <h3 data-i18n-html="f4_h">Update All <span class="tag">PRO</span></h3>
+      <p data-i18n="f4_p">Update every add-on at once, or auto-update on launch so you're always current without thinking about it.</p>
+    </div>
+    <div class="card">
+      <div class="ico">💾</div>
+      <h3 data-i18n-html="f5_h">Profiles, backups &amp; sync <span class="tag">PRO</span></h3>
+      <p data-i18n="f5_p">Save loadouts, back up your setup and settings, and sync everything across multiple PCs.</p>
+    </div>
+    <div class="card">
+      <div class="ico">🏷</div>
+      <h3 data-i18n-html="f6_h">Organize &amp; theme <span class="tag">PRO</span></h3>
+      <p data-i18n="f6_p">Sort with custom categories and switch between dark and light themes. Make it yours.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+  <h2 class="h2" data-i18n="price_h2">Simple pricing</h2>
+  <p class="lead" data-i18n="price_lead">The add-ons are always free. Pro is for the power tools that make managing them effortless.</p>
+  <div class="price reveal">
+    <div class="plan">
+      <div class="name" data-i18n="p_monthly">Monthly</div>
+      <div class="amt">$4.99</div>
+      <div class="per" data-i18n="p_per_mo">/ month</div>
+      <ul><li data-i18n="p_all">All Pro features</li><li data-i18n="p_trial">7-day free trial</li><li data-i18n="p_cancel">Cancel anytime</li></ul>
+      <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest" class="btn ghost" style="width:100%" data-i18n="p_getstarted">Get started</a>
+    </div>
+    <div class="plan best" data-badge="BEST VALUE">
+      <div class="name" data-i18n="p_annual">Annual</div>
+      <div class="amt">$19.99</div>
+      <div class="per" data-i18n="p_per_yr">/ year</div>
+      <div class="strike">$59.88</div>
+      <ul><li data-i18n="p_all">All Pro features</li><li data-i18n="p_trial">7-day free trial</li><li data-i18n="p_save">Save 67%</li></ul>
+      <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest" class="btn primary" style="width:100%" data-i18n="p_getstarted">Get started</a>
+    </div>
+    <div class="plan">
+      <div class="name" data-i18n="p_lifetime">Founder's Lifetime</div>
+      <div class="amt">$49.99</div>
+      <div class="per" data-i18n="p_per_once">one-time</div>
+      <ul><li data-i18n="p_forever">All Pro features, forever</li><li data-i18n="p_never">Never renews</li><li data-i18n="p_launch">Launch-only</li></ul>
+      <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest" class="btn ghost" style="width:100%" data-i18n="p_getstarted">Get started</a>
+    </div>
+  </div>
+  <p class="freeline" data-i18n-html="free_line">Or use the <b>free</b> version forever — browse, install, and remove add-ons at no cost.</p>
+</div></section>
+
+<section id="mac"><div class="wrap">
+  <div class="mac reveal">
+    <h3 data-i18n="mac_h">🍎 macOS — coming soon</h3>
+    <p data-i18n="mac_p">ESO runs on Mac, and so should your add-on manager. We're gauging interest before we build it — add your email and you'll be first to know.</p>
+    <a href="#" class="btn ghost" id="macWait" data-i18n="mac_btn">Join the macOS waitlist</a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div data-i18n="foot_copy">© Shoyru's Addon Suite. Not affiliated with ZeniMax / Bethesda. ESO add-ons are free per ESO's terms.</div>
+  <div style="display:flex;gap:18px">
+    <a href="https://github.com/shoyru-ai/eso-addon-manager">GitHub</a>
+    <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest" data-i18n="foot_download">Download</a>
+  </div>
+</div></footer>
+
+<script>
+  // ---- i18n: curated translations + language dropdown. Add a language by adding a block. ----
+  const I18N = {
+    en: {
+      nav_features:`Features`, nav_pricing:`Pricing`, nav_mac:`macOS`, nav_download:`Download`,
+      hero_badge:`For The Elder Scrolls Online · Windows`,
+      hero_h1:`Don't search for add-ons.<br><span class="grad">Describe</span> them.`,
+      hero_sub:`The add-on manager ESO actually deserves. Type what you want in plain English and AI finds it — then install, update, and organize everything in a couple of clicks.`,
+      cta_free:`Download free`, cta_pro:`See Pro`, hero_note:`Free core, no ads. Windows 10/11. ~150 MB.`,
+      stat1_t:`add-ons, searchable by meaning`, stat2_t:`install, with dependencies`, stat3_t:`to browse, install & remove`,
+      feat_h2:`Everything Minion does — and the thing it can't`,
+      feat_lead:`A fast, native, ESO-only manager. No Java bloat, no ads, no twelve other games.`,
+      f1_h:`Describe it, AI finds it <span class="tag">PRO</span>`,
+      f1_p:`"Show me alerts for abilities." Type what you want and AI surfaces the add-ons that match — by meaning, not just keywords. No one else does this.`,
+      f2_h:`Browse all of ESOUI`, f2_p:`Search the entire ESOUI catalog and install anything in one click. Filter by category, sort by downloads or date.`,
+      f3_h:`Dependencies, handled`, f3_p:`See exactly what each add-on needs — and let Pro auto-install missing libraries so nothing breaks in-game.`,
+      f4_h:`Update All <span class="tag">PRO</span>`, f4_p:`Update every add-on at once, or auto-update on launch so you're always current without thinking about it.`,
+      f5_h:`Profiles, backups & sync <span class="tag">PRO</span>`, f5_p:`Save loadouts, back up your setup and settings, and sync everything across multiple PCs.`,
+      f6_h:`Organize & theme <span class="tag">PRO</span>`, f6_p:`Sort with custom categories and switch between dark and light themes. Make it yours.`,
+      price_h2:`Simple pricing`, price_lead:`The add-ons are always free. Pro is for the power tools that make managing them effortless.`,
+      p_monthly:`Monthly`, p_per_mo:`/ month`, p_all:`All Pro features`, p_trial:`7-day free trial`, p_cancel:`Cancel anytime`,
+      p_annual:`Annual`, p_per_yr:`/ year`, p_save:`Save 67%`,
+      p_lifetime:`Founder's Lifetime`, p_per_once:`one-time`, p_forever:`All Pro features, forever`, p_never:`Never renews`, p_launch:`Launch-only`,
+      p_getstarted:`Get started`, p_badge:`BEST VALUE`,
+      free_line:`Or use the <b>free</b> version forever — browse, install, and remove add-ons at no cost.`,
+      mac_h:`🍎 macOS — coming soon`, mac_p:`ESO runs on Mac, and so should your add-on manager. We're gauging interest before we build it — add your email and you'll be first to know.`,
+      mac_btn:`Join the macOS waitlist`,
+      foot_copy:`© Shoyru's Addon Suite. Not affiliated with ZeniMax / Bethesda. ESO add-ons are free per ESO's terms.`, foot_download:`Download`,
+    },
+    pt: {
+      nav_features:`Recursos`, nav_pricing:`Preços`, nav_mac:`macOS`, nav_download:`Baixar`,
+      hero_badge:`Para The Elder Scrolls Online · Windows`,
+      hero_h1:`Não procure add-ons.<br><span class="grad">Descreva</span>-os.`,
+      hero_sub:`O gerenciador de add-ons que o ESO merece. Digite o que você quer em linguagem natural e a IA encontra — depois instale, atualize e organize tudo em poucos cliques.`,
+      cta_free:`Baixar grátis`, cta_pro:`Ver o Pro`, hero_note:`Núcleo gratuito, sem anúncios. Windows 10/11. ~150 MB.`,
+      stat1_t:`add-ons, pesquisáveis por significado`, stat2_t:`instalação, com dependências`, stat3_t:`para navegar, instalar e remover`,
+      feat_h2:`Tudo o que o Minion faz — e o que ele não consegue`,
+      feat_lead:`Um gerenciador rápido e nativo, só para ESO. Sem o peso do Java, sem anúncios, sem outros doze jogos.`,
+      f1_h:`Descreva e a IA encontra <span class="tag">PRO</span>`,
+      f1_p:`"Mostre alertas de habilidades." Digite o que você quer e a IA mostra os add-ons que combinam — por significado, não apenas palavras-chave. Ninguém mais faz isso.`,
+      f2_h:`Explore todo o ESOUI`, f2_p:`Pesquise todo o catálogo do ESOUI e instale qualquer coisa com um clique. Filtre por categoria, ordene por downloads ou data.`,
+      f3_h:`Dependências resolvidas`, f3_p:`Veja exatamente o que cada add-on precisa — e deixe o Pro instalar automaticamente as bibliotecas que faltam para nada quebrar no jogo.`,
+      f4_h:`Atualizar tudo <span class="tag">PRO</span>`, f4_p:`Atualize todos os add-ons de uma vez, ou atualize automaticamente ao abrir para estar sempre em dia sem pensar nisso.`,
+      f5_h:`Perfis, backups e sincronização <span class="tag">PRO</span>`, f5_p:`Salve configurações, faça backup do seu setup e ajustes, e sincronize tudo entre vários PCs.`,
+      f6_h:`Organize e personalize <span class="tag">PRO</span>`, f6_p:`Organize com categorias personalizadas e alterne entre temas claro e escuro. Deixe do seu jeito.`,
+      price_h2:`Preços simples`, price_lead:`Os add-ons são sempre gratuitos. O Pro é para as ferramentas avançadas que tornam o gerenciamento sem esforço.`,
+      p_monthly:`Mensal`, p_per_mo:`/ mês`, p_all:`Todos os recursos Pro`, p_trial:`Teste grátis de 7 dias`, p_cancel:`Cancele quando quiser`,
+      p_annual:`Anual`, p_per_yr:`/ ano`, p_save:`Economize 67%`,
+      p_lifetime:`Vitalício Fundador`, p_per_once:`pagamento único`, p_forever:`Todos os recursos Pro, para sempre`, p_never:`Nunca renova`, p_launch:`Só no lançamento`,
+      p_getstarted:`Começar`, p_badge:`MELHOR VALOR`,
+      free_line:`Ou use a versão <b>gratuita</b> para sempre — navegue, instale e remova add-ons sem custo.`,
+      mac_h:`🍎 macOS — em breve`, mac_p:`O ESO roda no Mac, e seu gerenciador de add-ons também deveria. Estamos avaliando o interesse antes de construir — deixe seu e-mail e seja o primeiro a saber.`,
+      mac_btn:`Entrar na lista de espera do macOS`,
+      foot_copy:`© Shoyru's Addon Suite. Não afiliado à ZeniMax / Bethesda. Os add-ons do ESO são gratuitos conforme os termos do ESO.`, foot_download:`Baixar`,
+    },
+    es: {
+      nav_features:`Funciones`, nav_pricing:`Precios`, nav_mac:`macOS`, nav_download:`Descargar`,
+      hero_badge:`Para The Elder Scrolls Online · Windows`,
+      hero_h1:`No busques add-ons.<br><span class="grad">Descríbelos</span>.`,
+      hero_sub:`El gestor de add-ons que ESO merece. Escribe lo que quieres en lenguaje natural y la IA lo encuentra — luego instala, actualiza y organiza todo en un par de clics.`,
+      cta_free:`Descargar gratis`, cta_pro:`Ver Pro`, hero_note:`Núcleo gratuito, sin anuncios. Windows 10/11. ~150 MB.`,
+      stat1_t:`add-ons, buscables por significado`, stat2_t:`instalación, con dependencias`, stat3_t:`para explorar, instalar y eliminar`,
+      feat_h2:`Todo lo que hace Minion — y lo que no puede`,
+      feat_lead:`Un gestor rápido y nativo, solo para ESO. Sin la pesadez de Java, sin anuncios, sin otros doce juegos.`,
+      f1_h:`Descríbelo, la IA lo encuentra <span class="tag">PRO</span>`,
+      f1_p:`"Muéstrame alertas de habilidades." Escribe lo que quieres y la IA muestra los add-ons que coinciden — por significado, no solo palabras clave. Nadie más hace esto.`,
+      f2_h:`Explora todo ESOUI`, f2_p:`Busca en todo el catálogo de ESOUI e instala cualquier cosa con un clic. Filtra por categoría, ordena por descargas o fecha.`,
+      f3_h:`Dependencias resueltas`, f3_p:`Ve exactamente qué necesita cada add-on — y deja que Pro instale automáticamente las librerías que faltan para que nada falle en el juego.`,
+      f4_h:`Actualizar todo <span class="tag">PRO</span>`, f4_p:`Actualiza todos los add-ons a la vez, o actualiza automáticamente al abrir para estar siempre al día sin pensarlo.`,
+      f5_h:`Perfiles, copias y sincronización <span class="tag">PRO</span>`, f5_p:`Guarda configuraciones, haz copia de seguridad de tu setup y ajustes, y sincroniza todo entre varios PC.`,
+      f6_h:`Organiza y personaliza <span class="tag">PRO</span>`, f6_p:`Ordena con categorías personalizadas y cambia entre temas claro y oscuro. Hazlo tuyo.`,
+      price_h2:`Precios simples`, price_lead:`Los add-ons son siempre gratis. Pro es para las herramientas avanzadas que hacen que gestionarlos sea fácil.`,
+      p_monthly:`Mensual`, p_per_mo:`/ mes`, p_all:`Todas las funciones Pro`, p_trial:`Prueba gratis de 7 días`, p_cancel:`Cancela cuando quieras`,
+      p_annual:`Anual`, p_per_yr:`/ año`, p_save:`Ahorra 67%`,
+      p_lifetime:`De por vida (Fundador)`, p_per_once:`pago único`, p_forever:`Todas las funciones Pro, para siempre`, p_never:`Nunca se renueva`, p_launch:`Solo en el lanzamiento`,
+      p_getstarted:`Empezar`, p_badge:`MEJOR VALOR`,
+      free_line:`O usa la versión <b>gratis</b> para siempre — explora, instala y elimina add-ons sin costo.`,
+      mac_h:`🍎 macOS — próximamente`, mac_p:`ESO funciona en Mac, y tu gestor de add-ons también debería. Estamos midiendo el interés antes de construirlo — deja tu correo y serás el primero en enterarte.`,
+      mac_btn:`Únete a la lista de espera de macOS`,
+      foot_copy:`© Shoyru's Addon Suite. No afiliado a ZeniMax / Bethesda. Los add-ons de ESO son gratuitos según los términos de ESO.`, foot_download:`Descargar`,
+    },
+  };
+
+  function applyLang(l){
+    const d = I18N[l] || I18N.en, en = I18N.en;
+    document.documentElement.lang = l;
+    document.querySelectorAll('[data-i18n]').forEach(el=>{ const k=el.dataset.i18n; const v=d[k]??en[k]; if(v!=null) el.textContent=v; });
+    document.querySelectorAll('[data-i18n-html]').forEach(el=>{ const k=el.dataset.i18nHtml; const v=d[k]??en[k]; if(v!=null) el.innerHTML=v; });
+    const badge = (d.p_badge??en.p_badge); const best=document.querySelector('.plan.best'); if(best&&badge) best.setAttribute('data-badge',badge);
+    try{ localStorage.setItem('lang',l); }catch(e){}
+    const sel=document.getElementById('lang'); if(sel) sel.value=l;
+  }
+  let saved=null; try{ saved=localStorage.getItem('lang'); }catch(e){}
+  const guess=(navigator.language||'en').slice(0,2).toLowerCase();
+  applyLang(saved || (I18N[guess]?guess:'en'));
+  document.getElementById('lang').addEventListener('change', e=>applyLang(e.target.value));
+
+  // Scroll-reveal
+  const io = new IntersectionObserver((entries)=>entries.forEach((e)=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold:0.12 });
+  document.querySelectorAll('.reveal').forEach((el)=>io.observe(el));
+</script>
+</body>
+</html>
