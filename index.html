@@ -112,6 +112,20 @@
   .plan li::before{content:"✓ ";color:var(--good);font-weight:700}
   .freeline{text-align:center;color:var(--muted);font-size:14px;margin-top:18px}
 
+  /* compare table */
+  .cmpwrap{margin-top:38px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--panel)}
+  .cmp{width:100%;border-collapse:collapse;font-size:15px}
+  .cmp th,.cmp td{padding:13px 18px;text-align:left;border-bottom:1px solid var(--border)}
+  .cmp tbody tr:last-child td{border-bottom:none}
+  .cmp thead th{font-weight:800;font-size:14px;letter-spacing:.3px;background:var(--panel2)}
+  .cmp td:first-child{color:var(--text);font-weight:500}
+  .cmp th.mk,.cmp td.mk{text-align:center;width:120px}
+  .cmp th.procol{color:var(--accent2)}
+  .cmp .yes{color:var(--good);font-weight:800;font-size:17px}
+  .cmp .no{color:var(--muted)}
+  .cmp tbody tr:hover{background:var(--panel2)}
+  @media(max-width:540px){.cmp th,.cmp td{padding:10px 10px;font-size:13px}.cmp th.mk,.cmp td.mk{width:56px}}
+
   /* mac */
   .mac{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
     padding:30px;text-align:center;margin-top:20px}
@@ -156,6 +170,7 @@
   <div class="logo">Shoyru's Addon Suite<span class="dot">.</span></div>
   <div class="links">
     <a href="#features" data-i18n="nav_features">Features</a>
+    <a href="#compare" data-i18n="nav_compare">Compare</a>
     <a href="#pricing" data-i18n="nav_pricing">Pricing</a>
     <a href="#mac" data-i18n="nav_mac">macOS</a>
     <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest/download/Shoyru.AddonSuite-win-Setup.exe" class="btn primary" style="padding:8px 16px" data-i18n="nav_download">Download</a>
@@ -201,7 +216,7 @@
   <div class="stats reveal">
     <div class="stat"><b>3,000+</b><span data-i18n="stat1_t">add-ons, searchable by meaning</span></div>
     <div class="stat"><b>1-click</b><span data-i18n="stat2_t">install, with dependencies</span></div>
-    <div class="stat"><b>$0</b><span data-i18n="stat3_t">to browse, install &amp; remove</span></div>
+    <div class="stat"><b>$0</b><span data-i18n="stat3_t">to browse, install, update &amp; remove</span></div>
   </div>
 </div>
 
@@ -226,8 +241,8 @@
     </div>
     <div class="card">
       <div class="ico">🔄</div>
-      <h3 data-i18n-html="f4_h">Update All <span class="tag">PRO</span></h3>
-      <p data-i18n="f4_p">Update every add-on at once, or auto-update on launch so you're always current without thinking about it.</p>
+      <h3 data-i18n="f4_h">One-click Update All</h3>
+      <p data-i18n-html="f4_p">Update every add-on at once — <b>free</b>. Pro adds auto-update on launch, so you're always current before you even log in.</p>
     </div>
     <div class="card">
       <div class="ico">💾</div>
@@ -239,6 +254,40 @@
       <h3 data-i18n-html="f6_h">Organize &amp; theme <span class="tag">PRO</span></h3>
       <p data-i18n="f6_p">Sort with custom categories and switch between dark and light themes. Make it yours.</p>
     </div>
+    <div class="card">
+      <div class="ico">🌐</div>
+      <h3 data-i18n-html="f7_h">Translate descriptions <span class="tag">PRO</span></h3>
+      <p data-i18n="f7_p">Add-on descriptions are written by their authors — usually in English. Translate any of them into your language with a single click.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="compare"><div class="wrap">
+  <h2 class="h2" data-i18n="cmp_h2">Free vs Pro</h2>
+  <p class="lead" data-i18n="cmp_lead">Everything you need to find, install, update, and remove add-ons is free. Pro adds the power tools.</p>
+  <div class="cmpwrap reveal">
+    <table class="cmp">
+      <thead><tr>
+        <th data-i18n="cmp_feature">Feature</th>
+        <th class="mk" data-i18n="cmp_free">Free</th>
+        <th class="mk procol" data-i18n="cmp_pro">Pro</th>
+      </tr></thead>
+      <tbody>
+        <tr><td data-i18n="cmp_browse">Browse, search &amp; install add-ons</td><td class="mk yes">✓</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_remove">Remove add-ons</td><td class="mk yes">✓</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_deps">See &amp; install dependencies</td><td class="mk yes">✓</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_update">Update add-ons (incl. Update All)</td><td class="mk yes">✓</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_describe">Describe — AI add-on finder</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_translate">Translate add-on descriptions</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_autodeps">Auto-install dependencies</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_autoupdate">Auto-update on launch</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_theme">Dark / light theme</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_categories">Organize with categories</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_profiles">Profiles / loadouts</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_backups">Backups &amp; restore</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+        <tr><td data-i18n="cmp_sync">Multi-PC sync</td><td class="mk no">—</td><td class="mk yes">✓</td></tr>
+      </tbody>
+    </table>
   </div>
 </div></section>
 
@@ -269,7 +318,7 @@
       <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest/download/Shoyru.AddonSuite-win-Setup.exe" class="btn ghost" style="width:100%" data-i18n="p_getstarted">Get started</a>
     </div>
   </div>
-  <p class="freeline" data-i18n-html="free_line">Or use the <b>free</b> version forever — browse, install, and remove add-ons at no cost.</p>
+  <p class="freeline" data-i18n-html="free_line">Or use the <b>free</b> version forever — browse, install, update, and remove add-ons at no cost.</p>
 </div></section>
 
 <section id="mac"><div class="wrap">
@@ -282,7 +331,9 @@
 
 <footer><div class="wrap">
   <div data-i18n="foot_copy">© Shoyru's Addon Suite. Not affiliated with ZeniMax / Bethesda. ESO add-ons are free per ESO's terms.</div>
-  <div style="display:flex;gap:18px">
+  <div style="display:flex;gap:18px;flex-wrap:wrap">
+    <a href="/terms.html" data-i18n="foot_terms">Terms</a>
+    <a href="/privacy.html" data-i18n="foot_privacy">Privacy</a>
     <a href="https://github.com/shoyru-ai/eso-addon-manager">GitHub</a>
     <a href="https://github.com/shoyru-ai/eso-addon-manager/releases/latest/download/Shoyru.AddonSuite-win-Setup.exe" data-i18n="foot_download">Download</a>
   </div>
@@ -292,82 +343,100 @@
   // ---- i18n: curated translations + language dropdown. Add a language by adding a block. ----
   const I18N = {
     en: {
-      nav_features:`Features`, nav_pricing:`Pricing`, nav_mac:`macOS`, nav_download:`Download`,
+      nav_features:`Features`, nav_compare:`Compare`, nav_pricing:`Pricing`, nav_mac:`macOS`, nav_download:`Download`,
       hero_badge:`For The Elder Scrolls Online · Windows`,
       hero_h1:`Don't search for add-ons.<br><span class="grad">Describe</span> them.`,
       hero_sub:`The add-on manager ESO actually deserves. Type what you want in plain English and AI finds it — then install, update, and organize everything in a couple of clicks.`,
       cta_free:`Download free`, cta_pro:`See Pro`, hero_note:`Free core, no ads. Windows 10/11. ~150 MB.`,
-      stat1_t:`add-ons, searchable by meaning`, stat2_t:`install, with dependencies`, stat3_t:`to browse, install & remove`,
+      stat1_t:`add-ons, searchable by meaning`, stat2_t:`install, with dependencies`, stat3_t:`to browse, install, update & remove`,
       feat_h2:`Everything our competitors do — and the thing they can't`,
       feat_lead:`A fast, native, ESO-only manager. No Java bloat, no ads, no twelve other games.`,
       f1_h:`Describe it, AI finds it <span class="tag">PRO</span>`,
       f1_p:`"Show me alerts for abilities." Type what you want and AI surfaces the add-ons that match — by meaning, not just keywords. No one else does this.`,
       f2_h:`Browse all of ESOUI`, f2_p:`Search the entire ESOUI catalog and install anything in one click. Filter by category, sort by downloads or date.`,
       f3_h:`Dependencies, handled`, f3_p:`See exactly what each add-on needs — and let Pro auto-install missing libraries so nothing breaks in-game.`,
-      f4_h:`Update All <span class="tag">PRO</span>`, f4_p:`Update every add-on at once, or auto-update on launch so you're always current without thinking about it.`,
+      f4_h:`One-click Update All`, f4_p:`Update every add-on at once — <b>free</b>. Pro adds auto-update on launch, so you're always current before you even log in.`,
       f5_h:`Profiles, backups & sync <span class="tag">PRO</span>`, f5_p:`Save loadouts, back up your setup and settings, and sync everything across multiple PCs.`,
       f6_h:`Organize & theme <span class="tag">PRO</span>`, f6_p:`Sort with custom categories and switch between dark and light themes. Make it yours.`,
+      f7_h:`Translate descriptions <span class="tag">PRO</span>`, f7_p:`Add-on descriptions are written by their authors — usually in English. Translate any of them into your language with a single click.`,
+      cmp_h2:`Free vs Pro`, cmp_lead:`Everything you need to find, install, update, and remove add-ons is free. Pro adds the power tools.`,
+      cmp_feature:`Feature`, cmp_free:`Free`, cmp_pro:`Pro`,
+      cmp_browse:`Browse, search & install add-ons`, cmp_remove:`Remove add-ons`, cmp_deps:`See & install dependencies`, cmp_update:`Update add-ons (incl. Update All)`,
+      cmp_describe:`Describe — AI add-on finder`, cmp_translate:`Translate add-on descriptions`, cmp_autodeps:`Auto-install dependencies`, cmp_autoupdate:`Auto-update on launch`,
+      cmp_theme:`Dark / light theme`, cmp_categories:`Organize with categories`, cmp_profiles:`Profiles / loadouts`, cmp_backups:`Backups & restore`, cmp_sync:`Multi-PC sync`,
       price_h2:`Simple pricing`, price_lead:`The add-ons are always free. Pro is for the power tools that make managing them effortless.`,
       p_monthly:`Monthly`, p_per_mo:`/ month`, p_all:`All Pro features`, p_trial:`7-day free trial`, p_cancel:`Cancel anytime`,
       p_annual:`Annual`, p_per_yr:`/ year`, p_save:`Save 67%`,
       p_lifetime:`Founder's Lifetime`, p_per_once:`one-time`, p_forever:`All Pro features, forever`, p_never:`Never renews`, p_launch:`Launch-only`,
       p_getstarted:`Get started`, p_badge:`BEST VALUE`,
-      free_line:`Or use the <b>free</b> version forever — browse, install, and remove add-ons at no cost.`,
+      free_line:`Or use the <b>free</b> version forever — browse, install, update, and remove add-ons at no cost.`,
       mac_h:`🍎 macOS — coming soon`, mac_p:`ESO runs on Mac, and so should your add-on manager. We're gauging interest before we build it — add your email and you'll be first to know.`,
       mac_btn:`Join the macOS waitlist`,
-      foot_copy:`© Shoyru's Addon Suite. Not affiliated with ZeniMax / Bethesda. ESO add-ons are free per ESO's terms.`, foot_download:`Download`,
+      foot_copy:`© Shoyru's Addon Suite. Not affiliated with ZeniMax / Bethesda. ESO add-ons are free per ESO's terms.`, foot_download:`Download`, foot_terms:`Terms`, foot_privacy:`Privacy`,
     },
     pt: {
-      nav_features:`Recursos`, nav_pricing:`Preços`, nav_mac:`macOS`, nav_download:`Baixar`,
+      nav_features:`Recursos`, nav_compare:`Comparar`, nav_pricing:`Preços`, nav_mac:`macOS`, nav_download:`Baixar`,
       hero_badge:`Para The Elder Scrolls Online · Windows`,
       hero_h1:`Não procure add-ons.<br><span class="grad">Descreva</span>-os.`,
       hero_sub:`O gerenciador de add-ons que o ESO merece. Digite o que você quer em linguagem natural e a IA encontra — depois instale, atualize e organize tudo em poucos cliques.`,
       cta_free:`Baixar grátis`, cta_pro:`Ver o Pro`, hero_note:`Núcleo gratuito, sem anúncios. Windows 10/11. ~150 MB.`,
-      stat1_t:`add-ons, pesquisáveis por significado`, stat2_t:`instalação, com dependências`, stat3_t:`para navegar, instalar e remover`,
+      stat1_t:`add-ons, pesquisáveis por significado`, stat2_t:`instalação, com dependências`, stat3_t:`para navegar, instalar, atualizar e remover`,
       feat_h2:`Tudo o que os concorrentes fazem — e o que eles não conseguem`,
       feat_lead:`Um gerenciador rápido e nativo, só para ESO. Sem o peso do Java, sem anúncios, sem outros doze jogos.`,
       f1_h:`Descreva e a IA encontra <span class="tag">PRO</span>`,
       f1_p:`"Mostre alertas de habilidades." Digite o que você quer e a IA mostra os add-ons que combinam — por significado, não apenas palavras-chave. Ninguém mais faz isso.`,
       f2_h:`Explore todo o ESOUI`, f2_p:`Pesquise todo o catálogo do ESOUI e instale qualquer coisa com um clique. Filtre por categoria, ordene por downloads ou data.`,
       f3_h:`Dependências resolvidas`, f3_p:`Veja exatamente o que cada add-on precisa — e deixe o Pro instalar automaticamente as bibliotecas que faltam para nada quebrar no jogo.`,
-      f4_h:`Atualizar tudo <span class="tag">PRO</span>`, f4_p:`Atualize todos os add-ons de uma vez, ou atualize automaticamente ao abrir para estar sempre em dia sem pensar nisso.`,
+      f4_h:`Atualizar tudo com um clique`, f4_p:`Atualize todos os add-ons de uma vez — <b>grátis</b>. O Pro adiciona atualização automática ao abrir, para você estar sempre em dia antes mesmo de entrar no jogo.`,
       f5_h:`Perfis, backups e sincronização <span class="tag">PRO</span>`, f5_p:`Salve configurações, faça backup do seu setup e ajustes, e sincronize tudo entre vários PCs.`,
       f6_h:`Organize e personalize <span class="tag">PRO</span>`, f6_p:`Organize com categorias personalizadas e alterne entre temas claro e escuro. Deixe do seu jeito.`,
+      f7_h:`Traduzir descrições <span class="tag">PRO</span>`, f7_p:`As descrições dos add-ons são escritas por seus autores — geralmente em inglês. Traduza qualquer uma para o seu idioma com um clique.`,
+      cmp_h2:`Grátis vs Pro`, cmp_lead:`Tudo o que você precisa para encontrar, instalar, atualizar e remover add-ons é grátis. O Pro adiciona as ferramentas avançadas.`,
+      cmp_feature:`Recurso`, cmp_free:`Grátis`, cmp_pro:`Pro`,
+      cmp_browse:`Explorar, pesquisar e instalar add-ons`, cmp_remove:`Remover add-ons`, cmp_deps:`Ver e instalar dependências`, cmp_update:`Atualizar add-ons (incl. Atualizar tudo)`,
+      cmp_describe:`Descrever — busca de add-ons por IA`, cmp_translate:`Traduzir descrições de add-ons`, cmp_autodeps:`Instalar dependências automaticamente`, cmp_autoupdate:`Atualização automática ao abrir`,
+      cmp_theme:`Tema claro / escuro`, cmp_categories:`Organizar com categorias`, cmp_profiles:`Perfis / configurações`, cmp_backups:`Backups e restauração`, cmp_sync:`Sincronização entre PCs`,
       price_h2:`Preços simples`, price_lead:`Os add-ons são sempre gratuitos. O Pro é para as ferramentas avançadas que tornam o gerenciamento sem esforço.`,
       p_monthly:`Mensal`, p_per_mo:`/ mês`, p_all:`Todos os recursos Pro`, p_trial:`Teste grátis de 7 dias`, p_cancel:`Cancele quando quiser`,
       p_annual:`Anual`, p_per_yr:`/ ano`, p_save:`Economize 67%`,
       p_lifetime:`Vitalício Fundador`, p_per_once:`pagamento único`, p_forever:`Todos os recursos Pro, para sempre`, p_never:`Nunca renova`, p_launch:`Só no lançamento`,
       p_getstarted:`Começar`, p_badge:`MELHOR VALOR`,
-      free_line:`Ou use a versão <b>gratuita</b> para sempre — navegue, instale e remova add-ons sem custo.`,
+      free_line:`Ou use a versão <b>gratuita</b> para sempre — navegue, instale, atualize e remova add-ons sem custo.`,
       mac_h:`🍎 macOS — em breve`, mac_p:`O ESO roda no Mac, e seu gerenciador de add-ons também deveria. Estamos avaliando o interesse antes de construir — deixe seu e-mail e seja o primeiro a saber.`,
       mac_btn:`Entrar na lista de espera do macOS`,
-      foot_copy:`© Shoyru's Addon Suite. Não afiliado à ZeniMax / Bethesda. Os add-ons do ESO são gratuitos conforme os termos do ESO.`, foot_download:`Baixar`,
+      foot_copy:`© Shoyru's Addon Suite. Não afiliado à ZeniMax / Bethesda. Os add-ons do ESO são gratuitos conforme os termos do ESO.`, foot_download:`Baixar`, foot_terms:`Termos`, foot_privacy:`Privacidade`,
     },
     es: {
-      nav_features:`Funciones`, nav_pricing:`Precios`, nav_mac:`macOS`, nav_download:`Descargar`,
+      nav_features:`Funciones`, nav_compare:`Comparar`, nav_pricing:`Precios`, nav_mac:`macOS`, nav_download:`Descargar`,
       hero_badge:`Para The Elder Scrolls Online · Windows`,
       hero_h1:`No busques add-ons.<br><span class="grad">Descríbelos</span>.`,
       hero_sub:`El gestor de add-ons que ESO merece. Escribe lo que quieres en lenguaje natural y la IA lo encuentra — luego instala, actualiza y organiza todo en un par de clics.`,
       cta_free:`Descargar gratis`, cta_pro:`Ver Pro`, hero_note:`Núcleo gratuito, sin anuncios. Windows 10/11. ~150 MB.`,
-      stat1_t:`add-ons, buscables por significado`, stat2_t:`instalación, con dependencias`, stat3_t:`para explorar, instalar y eliminar`,
+      stat1_t:`add-ons, buscables por significado`, stat2_t:`instalación, con dependencias`, stat3_t:`para explorar, instalar, actualizar y eliminar`,
       feat_h2:`Todo lo que hacen los competidores — y lo que no pueden`,
       feat_lead:`Un gestor rápido y nativo, solo para ESO. Sin la pesadez de Java, sin anuncios, sin otros doce juegos.`,
       f1_h:`Descríbelo, la IA lo encuentra <span class="tag">PRO</span>`,
       f1_p:`"Muéstrame alertas de habilidades." Escribe lo que quieres y la IA muestra los add-ons que coinciden — por significado, no solo palabras clave. Nadie más hace esto.`,
       f2_h:`Explora todo ESOUI`, f2_p:`Busca en todo el catálogo de ESOUI e instala cualquier cosa con un clic. Filtra por categoría, ordena por descargas o fecha.`,
       f3_h:`Dependencias resueltas`, f3_p:`Ve exactamente qué necesita cada add-on — y deja que Pro instale automáticamente las librerías que faltan para que nada falle en el juego.`,
-      f4_h:`Actualizar todo <span class="tag">PRO</span>`, f4_p:`Actualiza todos los add-ons a la vez, o actualiza automáticamente al abrir para estar siempre al día sin pensarlo.`,
+      f4_h:`Actualizar todo con un clic`, f4_p:`Actualiza todos los add-ons a la vez — <b>gratis</b>. Pro añade actualización automática al abrir, para estar siempre al día antes incluso de entrar al juego.`,
       f5_h:`Perfiles, copias y sincronización <span class="tag">PRO</span>`, f5_p:`Guarda configuraciones, haz copia de seguridad de tu setup y ajustes, y sincroniza todo entre varios PC.`,
       f6_h:`Organiza y personaliza <span class="tag">PRO</span>`, f6_p:`Ordena con categorías personalizadas y cambia entre temas claro y oscuro. Hazlo tuyo.`,
+      f7_h:`Traducir descripciones <span class="tag">PRO</span>`, f7_p:`Las descripciones de los add-ons las escriben sus autores — normalmente en inglés. Traduce cualquiera a tu idioma con un solo clic.`,
+      cmp_h2:`Gratis vs Pro`, cmp_lead:`Todo lo que necesitas para encontrar, instalar, actualizar y eliminar add-ons es gratis. Pro añade las herramientas avanzadas.`,
+      cmp_feature:`Función`, cmp_free:`Gratis`, cmp_pro:`Pro`,
+      cmp_browse:`Explorar, buscar e instalar add-ons`, cmp_remove:`Eliminar add-ons`, cmp_deps:`Ver e instalar dependencias`, cmp_update:`Actualizar add-ons (incl. Actualizar todo)`,
+      cmp_describe:`Describir — buscador de add-ons con IA`, cmp_translate:`Traducir descripciones de add-ons`, cmp_autodeps:`Instalar dependencias automáticamente`, cmp_autoupdate:`Actualización automática al abrir`,
+      cmp_theme:`Tema claro / oscuro`, cmp_categories:`Organizar con categorías`, cmp_profiles:`Perfiles / configuraciones`, cmp_backups:`Copias de seguridad y restauración`, cmp_sync:`Sincronización entre PC`,
       price_h2:`Precios simples`, price_lead:`Los add-ons son siempre gratis. Pro es para las herramientas avanzadas que hacen que gestionarlos sea fácil.`,
       p_monthly:`Mensual`, p_per_mo:`/ mes`, p_all:`Todas las funciones Pro`, p_trial:`Prueba gratis de 7 días`, p_cancel:`Cancela cuando quieras`,
       p_annual:`Anual`, p_per_yr:`/ año`, p_save:`Ahorra 67%`,
       p_lifetime:`De por vida (Fundador)`, p_per_once:`pago único`, p_forever:`Todas las funciones Pro, para siempre`, p_never:`Nunca se renueva`, p_launch:`Solo en el lanzamiento`,
       p_getstarted:`Empezar`, p_badge:`MEJOR VALOR`,
-      free_line:`O usa la versión <b>gratis</b> para siempre — explora, instala y elimina add-ons sin costo.`,
+      free_line:`O usa la versión <b>gratis</b> para siempre — explora, instala, actualiza y elimina add-ons sin costo.`,
       mac_h:`🍎 macOS — próximamente`, mac_p:`ESO funciona en Mac, y tu gestor de add-ons también debería. Estamos midiendo el interés antes de construirlo — deja tu correo y serás el primero en enterarte.`,
       mac_btn:`Únete a la lista de espera de macOS`,
-      foot_copy:`© Shoyru's Addon Suite. No afiliado a ZeniMax / Bethesda. Los add-ons de ESO son gratuitos según los términos de ESO.`, foot_download:`Descargar`,
+      foot_copy:`© Shoyru's Addon Suite. No afiliado a ZeniMax / Bethesda. Los add-ons de ESO son gratuitos según los términos de ESO.`, foot_download:`Descargar`, foot_terms:`Términos`, foot_privacy:`Privacidad`,
     },
   };
 
